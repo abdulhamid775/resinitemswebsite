@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Admin Products{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container section-header">
+    <h1>Edit Product Names & Descriptions</h1>
+    <p>Update product title, price and description from this page.</p>
+  </div>
+
+  <div class="container">
+    {% for product in products %}
+    <form method="post" enctype="multipart/form-data" class="order-summary" style="margin-bottom: 16px">
+      <input type="hidden" name="product_id" value="{{ product.id }}" />
+
+      <div class="order-item">
+        <strong>Product ID</strong>
+        <span>#{{ product.id }}</span>
+      </div>
+
+      <div class="order-item" style="align-items: center">
+        <strong>Image</strong>
+        <img
+          src="{{ product_image_url(product.image) }}?v={{ product.id }}-{{ product.image }}"
+          alt="{{ product.name }}"
+          style="width: 84px; height: 84px; object-fit: cover; border-radius: 10px"
+        />
+      </div>
+      <p style="margin: 0 0 10px; font-size: 12px; color: #6b7280">
+        Current file: {{ product.image or "No image (placeholder)" }}
+      </p>
+
+      <label for="name_{{ product.id }}">Product Name</label>
+      <input
+        id="name_{{ product.id }}"
+        type="text"
+        name="name"
+        value="{{ product.name }}"
+        required
+      />
+
+      <label for="price_{{ product.id }}">Price (INR)</label>
+      <input
+        id="price_{{ product.id }}"
+        type="number"
+        name="price"
+        min="1"
+        value="{{ product.price }}"
+        required
+      />
+
+      <label for="description_{{ product.id }}">Description</label>
+      <textarea id="description_{{ product.id }}" name="description" rows="4">
+{{ product.description or "Handmade resin artwork. Custom color and design options available on request." }}</textarea
+      >
+
+      <label for="image_file_{{ product.id }}">Upload New Product Image</label>
+      <input
+        id="image_file_{{ product.id }}"
+        type="file"
+        name="image_file"
+        accept=".jpg,.jpeg,.png,.webp"
+      />
+      <p style="margin: -6px 0 10px; font-size: 12px; color: #6b7280">
+        If you upload a file, it will replace the old image.
+      </p>
+
+      <label style="display: flex; align-items: center; gap: 8px; margin: 6px 0 12px">
+        <input type="checkbox" name="remove_image" value="1" style="width: auto; margin: 0" />
+        Remove current image (show placeholder)
+      </label>
+
+      <button type="submit" class="btn btn-primary">Save Product</button>
+    </form>
+    {% else %}
+    <div class="order-summary">
+      <p style="margin: 0">No products found.</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

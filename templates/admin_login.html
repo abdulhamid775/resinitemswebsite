@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Admin Login{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container auth-grid">
+    <div class="auth-card">
+      <h1>Admin Login</h1>
+      <p class="auth-meta" style="margin-bottom: 14px">
+        Enter admin password to manage products and customer orders.
+      </p>
+      <form method="post">
+        <input type="hidden" name="next" value="{{ next_url }}" />
+        <label for="admin_password">Admin Password</label>
+        <input
+          id="admin_password"
+          type="password"
+          name="password"
+          placeholder="Enter admin password"
+          required
+        />
+        <button type="submit" class="btn btn-primary btn-full">Login</button>
+      </form>
+      <div class="auth-meta">
+        <a href="{{ url_for('index') }}">Back to website</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

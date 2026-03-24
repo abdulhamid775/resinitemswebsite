@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container section-header">
+    <h1>Admin Panel</h1>
+    <p>Use one page to manage products and customer orders.</p>
+  </div>
+
+  <div class="container" style="max-width: 720px">
+    <div class="order-summary" style="margin-bottom: 16px">
+      <div class="order-item">
+        <strong>Total Products</strong>
+        <span>{{ total_products }}</span>
+      </div>
+      <div class="order-item">
+        <strong>Total Orders</strong>
+        <span>{{ total_orders }}</span>
+      </div>
+      <div class="order-item">
+        <strong>Cancelled Orders</strong>
+        <span>{{ cancelled_orders }}</span>
+      </div>
+    </div>
+
+    <div class="order-summary">
+      <div class="detail-actions" style="margin-top: 0; margin-bottom: 10px">
+        <a href="{{ url_for('admin_logout') }}" class="btn btn-link">Logout Admin</a>
+      </div>
+      <div class="detail-actions" style="margin-top: 0">
+        <a href="{{ url_for('admin_products') }}" class="btn btn-primary"
+          >Manage Products</a
+        >
+        <a href="{{ url_for('admin_orders') }}" class="btn btn-secondary"
+          >View Customer Orders</a
+        >
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

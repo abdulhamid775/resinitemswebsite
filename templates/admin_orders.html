@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Admin Orders{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container section-header">
+    <h1>Customer Orders</h1>
+    <p>Review all placed orders and item details.</p>
+  </div>
+
+  <div class="container">
+    {% for order in orders %}
+    <div class="order-summary" style="margin-bottom: 16px">
+      <div class="order-item"><strong>Order ID</strong><span>#{{ order.id }}</span></div>
+      <div class="order-item"><strong>Status</strong><span>{{ order_status_map[order.id].replace("_", " ")|title }}</span></div>
+      <div style="margin: 8px 0 10px">
+        <form method="post" action="{{ url_for('update_order_status', order_id=order.id) }}">
+          <label for="status_{{ order.id }}" style="margin-bottom: 6px">Update Status</label>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+            <select id="status_{{ order.id }}" name="status" style="max-width: 220px; margin: 0">
+              {% for status in ["ordered", "packed_location", "packed_nearest_center", "shipped", "arrived", "cancelled"] %}
+              <option value="{{ status }}" {% if order_status_map[order.id] == status %}selected{% endif %}>
+                {{ status.replace("_", " ")|title }}
+              </option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-secondary btn-sm">Save Status</button>
+          </div>
+        </form>
+      </div>
+      <div class="order-item"><strong>Name</strong><span>{{ order.name or "-" }}</span></div>
+      <div class="order-item"><strong>Phone</strong><span>{{ order.phone or "-" }}</span></div>
+      <div class="order-item"><strong>Address</strong><span>{{ order.address or "-" }}</span></div>
+      <div class="order-item"><strong>City</strong><span>{{ order.city or "-" }}</span></div>
+      <div class="order-item"><strong>State</strong><span>{{ order.state or "-" }}</span></div>
+      <div class="order-item"><strong>Pincode</strong><span>{{ order.pincode or "-" }}</span></div>
+      <div class="order-item">
+        <strong>Date</strong>
+        <span>{{ order.order_date.strftime("%d %b %Y, %I:%M %p") if order.order_date else "-" }}</span>
+      </div>
+
+      <div class="order-total">
+        <strong>Total</strong>
+        <strong>₹{{ order.total_price }}</strong>
+      </div>
+
+      <div style="margin-top: 12px">
+        <h3 style="margin: 0 0 8px">Items</h3>
+        {% for item in order_items_map.get(order.id, []) %}
+        <div class="order-item">
+          <span>Product #{{ item.product_id }} x {{ item.quantity }}</span>
+          <span>₹{{ item.price }}</span>
+        </div>
+        {% else %}
+        <p style="margin: 0">No items found for this order.</p>
+        {% endfor %}
+      </div>
+    </div>
+    {% else %}
+    <div class="order-summary">
+      <p style="margin: 0">No orders yet.</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

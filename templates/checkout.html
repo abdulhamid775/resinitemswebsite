@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container checkout-grid">
+    <div>
+      <h1>Checkout</h1>
+      <form action="{{ url_for('checkout') }}" method="post" class="checkout-form">
+        <h3>Shipping Details</h3>
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" required />
+
+        <label for="address">Address</label>
+        <textarea id="address" name="address" rows="3" required></textarea>
+
+        <div class="grid-3">
+          <div>
+            <label for="pincode">Pincode</label>
+            <input type="text" id="pincode" name="pincode" required />
+          </div>
+          <div>
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" required />
+          </div>
+          <div>
+            <label for="state">State</label>
+            <input type="text" id="state" name="state" required />
+          </div>
+        </div>
+
+        <h3>Delivery</h3>
+        <p>Estimated Delivery: 5 – 7 Days (Pan India)</p>
+
+        <h3>Payment</h3>
+        <p><strong>Cash on Delivery (COD) only.</strong> Pay when your order arrives.</p>
+
+        <button type="submit" class="btn btn-primary btn-full">
+          Place Order
+        </button>
+      </form>
+    </div>
+
+    <div class="order-summary">
+      <h3>Order Summary</h3>
+      {% for product_id, item in cart.items() %}
+      <div class="order-item">
+        <div>
+          <div class="name">{{ item.name }}</div>
+          <div class="meta">Qty: {{ item.quantity }}</div>
+        </div>
+        <div>₹{{ item.price * item.quantity }}</div>
+      </div>
+      {% endfor %}
+      <div class="order-total">
+        <span>Total</span>
+        <strong>₹{{ total }}</strong>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+

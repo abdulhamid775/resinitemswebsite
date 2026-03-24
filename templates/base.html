@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Gift Hustle - {% block title %}{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css', v='20260324-2') }}"
+    />
+  </head>
+  <body>
+    <header class="navbar app-shell-header">
+      <div class="container">
+        <div class="top-delivery-row">
+          <span>Deliver to Customer - PAN India</span>
+        </div>
+        <div class="app-search-row">
+          <a href="{{ url_for('index') }}" class="logo app-logo">
+            <span class="logo-icon">G</span>
+          </a>
+          <form action="{{ url_for('shop') }}" method="get" class="app-search-form">
+            <input
+              type="text"
+              name="q"
+              placeholder="Search resin products"
+              aria-label="Search products"
+            />
+            <button type="submit" class="search-btn">Search</button>
+          </form>
+          <a href="{{ url_for('cart') }}" class="icon-btn">Bag ({{ cart_count }})</a>
+        </div>
+        <nav class="nav-links app-tabs">
+          <a href="{{ url_for('index') }}">Home</a>
+          <a href="{{ url_for('shop') }}">Shop</a>
+          <a href="{{ url_for('contact') }}">Contact</a>
+          <a href="{{ url_for('about') }}">About</a>
+          <a href="{{ url_for('shop') }}">Explore More Product</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div class="flash-container container">
+        {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-grid">
+        <div>
+          <h4>The Gift Hustle</h4>
+          <p>Handmade resin art and gifts crafted with love in India.</p>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <p>Email: memonhuma331@gmail.com</p>
+          <p>WhatsApp: +91 8128404499</p>
+        </div>
+        <div>
+          <h4>Info</h4>
+          <a href="#">Shipping Policy</a><br />
+          <a href="#">Refund Policy</a>
+        </div>
+        <div>
+          <h4>Follow</h4>
+          <a
+            href="https://www.instagram.com/the_gift_hustle?igsh=MXZ3M3lwbnViNHYxMw=="
+            target="_blank"
+            rel="noopener noreferrer"
+            >Instagram @the_gift_hustle</a
+          >
+        </div>
+      </div>
+      <div class="footer-bottom">
+        © {{ now().year if now else 2026 }} The Gift Hustle. All rights
+        reserved.
+      </div>
+    </footer>
+
+    <a
+      href="https://wa.me/918128404499"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="whatsapp-float"
+      aria-label="Chat on WhatsApp"
+      >WhatsApp</a
+    >
+
+    <script src="{{ url_for('static', filename='js/main.js', v='20260324-2') }}"></script>
+    {% block scripts %}{% endblock %}
+    <nav class="mobile-bottom-nav">
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('shop') }}">Shop</a>
+      <a href="{{ url_for('contact') }}">Contact</a>
+      <a href="{{ url_for('about') }}">About</a>
+      <a href="{{ url_for('shop') }}">Explore</a>
+    </nav>
+  </body>
+</html>
+

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Shop{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container section-header">
+    <h1>Shop All Gifts</h1>
+    <p>Browse handmade resin pieces, ready to gift.</p>
+    <form class="shop-search" method="get" action="{{ url_for('shop') }}">
+      {% if filter_category %}
+      <input type="hidden" name="category" value="{{ filter_category }}" />
+      {% endif %}
+      <input
+        type="text"
+        name="q"
+        value="{{ search_term or '' }}"
+        placeholder="Search products..."
+        aria-label="Search products"
+      />
+      <button type="submit" class="btn btn-primary btn-sm">Search</button>
+      {% if search_term %}
+      <a href="{{ url_for('shop', category=filter_category) }}" class="btn btn-secondary btn-sm">Clear</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <div class="container">
+    <div class="product-grid">
+      {% for product in products %}
+      <div class="product-card">
+        <div class="product-image-wrap">
+          <img
+            src="{{ product_image_url(product.image) }}"
+            alt="{{ product.name }}"
+            loading="lazy"
+          />
+          <a
+            href="{{ url_for('product_detail', product_id=product.id) }}"
+            class="quick-view-btn"
+            >Quick View</a
+          >
+        </div>
+        <div class="product-info">
+          <h3>{{ product.name }}</h3>
+          <p class="product-snippet">
+            {{ product.description or "Handmade resin artwork with premium finish. Perfect for gifting and decor." }}
+          </p>
+          <p class="price">₹{{ product.price }}</p>
+          <form
+            action="{{ url_for('add_to_cart', product_id=product.id) }}"
+            method="post"
+          >
+            <button type="submit" class="btn btn-primary btn-sm">
+              Add to Cart
+            </button>
+            <a
+              href="{{ url_for('product_detail', product_id=product.id) }}"
+              class="btn btn-link btn-sm"
+              >View Details</a
+            >
+          </form>
+        </div>
+      </div>
+      {% else %}
+      <p>
+        No products found{% if search_term %} for "{{ search_term }}"{% endif %}.
+      </p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+

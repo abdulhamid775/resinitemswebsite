@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Order Details{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container section-header">
+    <h1>Order Details</h1>
+    <p>Track your latest order and cancel it if needed.</p>
+  </div>
+
+  <div class="container" style="max-width: 760px">
+    <div class="order-summary" style="margin-bottom: 16px">
+      <div class="order-item"><strong>Order ID</strong><span>#{{ order.id }}</span></div>
+      <div class="order-item"><strong>Status</strong><span>{{ order.status.replace("_", " ")|title }}</span></div>
+      <div class="order-item"><strong>Name</strong><span>{{ order.name or "-" }}</span></div>
+      <div class="order-item"><strong>Phone</strong><span>{{ order.phone or "-" }}</span></div>
+      <div class="order-item"><strong>Total</strong><strong>₹{{ order.total_price }}</strong></div>
+      <div class="order-item">
+        <strong>Date</strong>
+        <span>{{ order.order_date.strftime("%d %b %Y, %I:%M %p") if order.order_date else "-" }}</span>
+      </div>
+      <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 10px 0" />
+      <h3 style="margin: 0 0 8px">Order Tracking</h3>
+      <div style="display: grid; gap: 6px; margin-bottom: 8px">
+        {% for step in tracking_steps %}
+        {% set is_done = current_status != "cancelled" and loop.index0 <= current_step_index %}
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid {{ '#c7d2fe' if is_done else '#e5e7eb' }};
+            background: {{ '#eef2ff' if is_done else '#ffffff' }};
+          "
+        >
+          <span>{{ step.label }}</span>
+          <span style="font-size: 12px; color: #6b7280">{{ step.date.strftime("%d %b %Y") }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="order-item">
+        <strong>Ordered On</strong>
+        <span>{{ order.order_date.strftime("%d %b %Y") if order.order_date else "-" }}</span>
+      </div>
+      <div class="order-item">
+        <strong>Expected Ship Date</strong>
+        <span>{{ expected_ship_date.strftime("%d %b %Y") }}</span>
+      </div>
+      <div class="order-item">
+        <strong>Expected Delivery Date</strong>
+        <span>{{ expected_delivery_date.strftime("%d %b %Y") }}</span>
+      </div>
+      <p style="margin: 8px 0 0; font-size: 13px; color: #6b7280">
+        Current status: <strong>{{ order.status.replace("_", " ")|title }}</strong>
+      </p>
+
+      <div style="margin-top: 10px">
+        <a
+          href="{{ url_for('live_order_tracking', order_id=order.id) }}"
+          class="btn btn-primary"
+          style="margin-right: 8px; margin-bottom: 8px"
+          >Check Your Live Order</a
+        >
+        {% if can_cancel %}
+        <form
+          method="post"
+          action="{{ url_for('cancel_my_order', order_id=order.id) }}"
+          onsubmit="return confirm('Do you want to cancel this order?')"
+          style="display: inline-block"
+        >
+          <button type="submit" class="btn btn-secondary">Cancel This Order</button>
+        </form>
+        {% elif order.status == "cancelled" %}
+        <span class="flash flash-info" style="display: inline-block; margin: 0">This order is cancelled.</span>
+        {% else %}
+        <span class="flash flash-warning" style="display: inline-block; margin: 0"
+          >Cancel option available only from the same device right after order placement.</span
+        >
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="order-summary">
+      <h3 style="margin: 0 0 10px">Items</h3>
+      {% for item in items %}
+      <div class="order-item">
+        <span>Product #{{ item.product_id }} x {{ item.quantity }}</span>
+        <span>₹{{ item.price }}</span>
+      </div>
+      {% else %}
+      <p style="margin: 0">No items found.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

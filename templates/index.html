@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Handmade Resin Gifts{% endblock %}
+
+{% block content %}
+<section class="home-app-shell">
+  <div class="container">
+    <div class="quick-category-scroll">
+      <a href="{{ url_for('shop') }}" class="quick-cat-item">
+        <span class="quick-cat-thumb">All</span>
+        <span>All</span>
+      </a>
+      <a href="{{ url_for('shop') }}" class="quick-cat-item">
+        <span class="quick-cat-thumb">N</span>
+        <span>New</span>
+      </a>
+      <a href="{{ url_for('contact') }}" class="quick-cat-item">
+        <span class="quick-cat-thumb">C</span>
+        <span>Custom</span>
+      </a>
+      <a href="{{ url_for('shop') }}" class="quick-cat-item">
+        <span class="quick-cat-thumb">G</span>
+        <span>Gifts</span>
+      </a>
+      <a href="{{ url_for('about') }}" class="quick-cat-item">
+        <span class="quick-cat-thumb">A</span>
+        <span>About</span>
+      </a>
+    </div>
+
+    <div class="promo-hero-card">
+      <img
+        src="{{ url_for('static', filename='images/resin-whatsapp2026.png') }}"
+        alt="Resin artist at work"
+        loading="lazy"
+      />
+    </div>
+    <div class="promo-caption">
+      <p class="promo-brand">THE GIFT HUSTLE</p>
+      <h2>Handmade Resin Art Studio</h2>
+      <p>Every piece is crafted by hand with premium resin, artistic detail, and lasting finish.</p>
+    </div>
+
+    <div class="promo-strip">
+      <span>Instant Discount on bulk order</span>
+      <a href="{{ url_for('contact') }}">Contact now</a>
+    </div>
+
+    <div class="section-header left">
+      <h2>Continue Shopping</h2>
+    </div>
+    <div class="home-product-scroll">
+      {% for product in featured_products %}
+      <a
+        class="home-product-card"
+        href="{{ url_for('product_detail', product_id=product.id) }}"
+      >
+        <div class="home-product-image-wrap">
+          <img
+            src="{{ product_image_url(product.image) }}"
+            alt="{{ product.name }}"
+            loading="lazy"
+          />
+        </div>
+        <div class="home-product-meta">
+          <h3>{{ product.name }}</h3>
+          <p>₹{{ product.price }}</p>
+        </div>
+      </a>
+      {% else %}
+      <p>No products yet. Add some from the admin panel.</p>
+      {% endfor %}
+    </div>
+
+    <div class="section-header left">
+      <h2>Trending Collection</h2>
+    </div>
+    <div class="mini-grid">
+      {% for product in best_sellers %}
+      <a
+        class="mini-grid-item"
+        href="{{ url_for('product_detail', product_id=product.id) }}"
+      >
+        <img
+          src="{{ product_image_url(product.image) }}"
+          alt="{{ product.name }}"
+          loading="lazy"
+        />
+      </a>
+      {% endfor %}
+    </div>
+
+    <div class="section-header left">
+      <h2>Instagram Preview</h2>
+      <p>
+        Follow
+        <a
+          href="https://www.instagram.com/the_gift_hustle?igsh=MXZ3M3lwbnViNHYxMw=="
+          target="_blank"
+          rel="noopener noreferrer"
+          ><strong>@the_gift_hustle</strong></a
+        >
+      </p>
+    </div>
+    <div class="mini-grid">
+      {% for product in featured_products[:4] %}
+      <a
+        class="mini-grid-item"
+        href="{{ url_for('product_detail', product_id=product.id) }}"
+        aria-label="{{ product.name }}"
+      >
+        <img
+          src="{{ product_image_url(product.image) }}"
+          alt="{{ product.name }}"
+          loading="lazy"
+        />
+      </a>
+      {% endfor %}
+    </div>
+    <div class="home-bottom-space"></div>
+  </div>
+</section>
+{% endblock %}
+
