@@ -210,7 +210,11 @@ def auto_seed_products_from_images():
 def inject_cart_count():
     cart = session.get("cart", {})
     count = sum(item["quantity"] for item in cart.values())
-    return {"cart_count": count, "product_image_url": product_image_url}
+    return {
+        "cart_count": count,
+        "product_image_url": product_image_url,
+        "current_year": datetime.utcnow().year,
+    }
 
 
 def product_image_url(filename):
@@ -721,8 +725,12 @@ def admin_logout():
     return redirect(url_for("index"))
 
 
-if __name__ == "__main__":
+# Gunicorn (Render/production) never runs __main__ — initialize DB when the app loads.
+with app.app_context():
     init_db()
+
+
+if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
         port=int(os.environ.get("PORT", 5000)),
