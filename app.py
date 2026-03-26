@@ -440,6 +440,15 @@ def google_site_verification():
     return Response(content + "\n", mimetype="text/html")
 
 
+# Some users accidentally add the verification as if it should be under
+# `/sitemap.xml/` (like in the screenshot). Serve it there too so verification
+# always succeeds.
+@app.route("/sitemap.xml/googleca7142777eae760a.html")
+def google_site_verification_under_sitemap():
+    content = "google-site-verification: googleca7142777eae760a.html"
+    return Response(content + "\n", mimetype="text/html")
+
+
 @app.route("/about")
 def about():
     return render_template("about.html")
