@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block title %}About{% endblock %}
 
+{% block meta_description %}
+Learn about The Gift Hustle: handcrafted resin art and personalized gifts made with love in India.
+{% endblock %}
+{% block og_image_url %}
+{{ request.url_root.rstrip('/') ~ url_for('static', filename='images/resin-artist-banner.png') }}
+{% endblock %}
+
 {% block content %}
 <section class="section">
   <div class="container story-grid">

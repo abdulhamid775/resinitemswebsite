@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Handmade Resin Gifts{% endblock %}
 
+{% block meta_description %}
+Shop handmade resin gifts and custom nameplates. Premium resin art crafted with love in India. Pan-India delivery.
+{% endblock %}
+{% block og_image_url %}
+{{ request.url_root.rstrip('/') ~ url_for('static', filename='images/resin-whatsapp2026.png') }}
+{% endblock %}
+
 {% block content %}
 <section class="home-app-shell">
   <div class="container">
@@ -36,7 +43,7 @@
     </div>
     <div class="promo-caption">
       <p class="promo-brand">THE GIFT HUSTLE</p>
-      <h2>Handmade Resin Art Studio</h2>
+      <h1>Handmade Resin Art Studio</h1>
       <p>Every piece is crafted by hand with premium resin, artistic detail, and lasting finish.</p>
     </div>
 

@@ -3,7 +3,48 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Gift Hustle - {% block title %}{% endblock %}</title>
+    <title>{% block title %}The Gift Hustle{% endblock %} | The Gift Hustle</title>
+    {% block meta_description %}
+      Handmade resin art and gifts crafted with love in India.
+    {% endblock %}
+    {% block meta_robots %}index,follow{% endblock %}
+    {% block og_image_url %}
+      {{ url_for('static', filename='images/resin-artist-banner.png') }}
+    {% endblock %}
+    <meta
+      name="description"
+      content="{{ self.meta_description() | trim | e }}"
+    />
+    <meta name="robots" content="{{ self.meta_robots() | trim | e }}" />
+    <link rel="canonical" href="{{ request.base_url }}" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="The Gift Hustle" />
+    <meta property="og:title" content="{{ self.title() | trim | e }}" />
+    <meta
+      property="og:description"
+      content="{{ self.meta_description() | trim | e }}"
+    />
+    <meta property="og:url" content="{{ request.base_url }}" />
+    <meta property="og:image" content="{{ self.og_image_url() | trim | e }}" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ self.title() | trim | e }}" />
+    <meta
+      name="twitter:description"
+      content="{{ self.meta_description() | trim | e }}"
+    />
+    <meta name="twitter:image" content="{{ self.og_image_url() | trim | e }}" />
+
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/resin-artist-banner.png') }}"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="{{ url_for('static', filename='images/resin-artist-banner.png') }}"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -99,6 +140,25 @@
       aria-label="Chat on WhatsApp"
       >WhatsApp</a
     >
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "The Gift Hustle",
+        "url": "{{ request.url_root.rstrip('/') }}/",
+        "logo": "{{ request.url_root.rstrip('/') ~ url_for('static', filename='images/resin-artist-banner.png') }}",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "telephone": "+91 8128404499",
+          "email": "memonhuma331@gmail.com"
+        },
+        "sameAs": [
+          "https://www.instagram.com/the_gift_hustle?igsh=MXZ3M3lwbnViNHYxMw=="
+        ]
+      }
+    </script>
 
     <script src="{{ url_for('static', filename='js/main.js', v='20260324-2') }}"></script>
     {% block scripts %}{% endblock %}

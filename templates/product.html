@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block title %}{{ product.name }}{% endblock %}
 
+{% block meta_description %}
+{{ (product.description or "Handmade resin art piece from The Gift Hustle studio. Each item is unique and may vary slightly in pattern and color.")|truncate(155, true) }}
+{% endblock %}
+{% block og_image_url %}
+{{ request.url_root.rstrip('/') ~ product_image_url(product.image) }}
+{% endblock %}
+
 {% block content %}
 <section class="section">
   <div class="container product-detail-grid">
@@ -47,5 +54,26 @@
     </div>
   </div>
 </section>
+
+{% set product_url = request.url_root.rstrip('/') ~ url_for('product_detail', product_id=product.id) %}
+{% set product_image_src = request.url_root.rstrip('/') ~ product_image_url(product.image) %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": {{ product.name|tojson }},
+  "description": {{ (product.description or "Handmade resin art piece from The Gift Hustle studio. Each item is unique and may vary slightly in pattern and color.")|tojson }},
+  "image": [{{ product_image_src|tojson }}],
+  "brand": { "@type": "Brand", "name": "The Gift Hustle" },
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "INR",
+    "price": {{ product.price }},
+    "availability": "https://schema.org/InStock",
+    "url": {{ product_url|tojson }}
+  }
+}
+</script>
+
 {% endblock %}
 

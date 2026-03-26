@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -8,6 +8,7 @@ from functools import wraps
 import os
 import shutil
 import uuid
+from xml.sax.saxutils import escape as xml_escape
 
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -371,6 +372,64 @@ def shop():
 def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
     return render_template("product.html", product=product)
+
+
+@app.route("/robots.txt")
+def robots_txt():
+    base_url = request.url_root.rstrip("/")
+    sitemap_url = f"{base_url}/sitemap.xml"
+    lines = [
+        "User-agent: *",
+        "Allow: /",
+        "Disallow: /admin",
+        "Disallow: /login",
+        "Disallow: /signup",
+        "Disallow: /cart",
+        "Disallow: /checkout",
+        "Disallow: /update-cart",
+        "Disallow: /order",
+        "Disallow: /order/",
+        f"Sitemap: {sitemap_url}",
+    ]
+    return Response("\n".join(lines) + "\n", mimetype="text/plain")
+
+
+@app.route("/sitemap.xml")
+def sitemap_xml():
+    base_url = request.url_root.rstrip("/")
+    today = datetime.utcnow().date().isoformat()
+
+    static_paths = [
+        (url_for("index"), "daily", 1.0),
+        (url_for("shop"), "weekly", 0.8),
+        (url_for("about"), "yearly", 0.6),
+        (url_for("contact"), "yearly", 0.6),
+    ]
+
+    products = Product.query.order_by(Product.id.desc()).all()
+    product_paths = [url_for("product_detail", product_id=p.id) for p in products]
+
+    url_entries = []
+    for path, changefreq, priority in static_paths + [
+        (path, "weekly", 0.7) for path in product_paths
+    ]:
+        loc = f"{base_url}{path}"
+        url_entries.append(
+            "<url>"
+            f"<loc>{xml_escape(loc)}</loc>"
+            f"<lastmod>{today}</lastmod>"
+            f"<changefreq>{xml_escape(changefreq)}</changefreq>"
+            f"<priority>{priority}</priority>"
+            "</url>"
+        )
+
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        + "".join(url_entries)
+        + "</urlset>"
+    )
+    return Response(xml, mimetype="application/xml")
 
 
 @app.route("/about")
