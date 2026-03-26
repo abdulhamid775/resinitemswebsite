@@ -432,6 +432,14 @@ def sitemap_xml():
     return Response(xml, mimetype="application/xml")
 
 
+# Google Search Console HTML-file verification.
+# We serve the file from the app so you don't need to manually upload anything to Render.
+@app.route("/googleca7142777eae760a.html")
+def google_site_verification():
+    content = "google-site-verification: googleca7142777eae760a.html"
+    return Response(content + "\n", mimetype="text/html")
+
+
 @app.route("/about")
 def about():
     return render_template("about.html")
